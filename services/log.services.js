@@ -7,7 +7,7 @@ const printError= error=>{
 const printSucces= succes=>{
     console.log(chalk.bgYellow('SUCCES:'+""+succes));
 }
-const printHelp= help=>{
+const printHelp= ()=>{
     console.log(dedent`${chalk.bgYellow('HELP')}
     -s [CITY] for install city
     -h for help
