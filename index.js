@@ -9,7 +9,7 @@ const saveToken=async(token)=>{
         return
     }
     try {
-        await saveKeyValue(Token_dictionary.token,token)
+        await saveKeyValue( Token_dictionary.token,token)
         printSucces('Token was saved')
     } catch (error) {
         printError(error.message)
@@ -19,6 +19,7 @@ const saveToken=async(token)=>{
 const startCLI=()=>{
   
     const args=getArgs(process.argv)
+    // console.log(process.env)/;
     if(args.h)
     {
         printHelp()
@@ -32,7 +33,7 @@ const startCLI=()=>{
     {
         return saveToken(args.t)
     }
-  getWeather('uzbekistan')
+  getWeather(process.env.CITY??'uzbekistan')
 }
 
 startCLI()

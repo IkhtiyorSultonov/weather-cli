@@ -3,7 +3,7 @@ import { Token_dictionary, getValueKey, } from "./storage.services.js"
 
 const getWeather=async city =>
 {
-    const token=await getValueKey(Token_dictionary.token)
+    const token=await getValueKey(process.env.Token??Token_dictionary.token)
     
 	if (!token) {
         throw new Error("API doesn't exist, -t [API_KEY] for saving token")
@@ -16,7 +16,7 @@ const getWeather=async city =>
             units:'metric'
         }
     })
-    return data
+    console.log(data);
     
     
     
