@@ -1,6 +1,28 @@
 import axios from "axios"
 import { Token_dictionary, getValueKey, } from "./storage.services.js"
 
+const getIcon = icon => {
+	switch (icon.slice(0, -1)) {
+		case '01':
+			return '☀️'
+		case '02':
+			return '🌤️'
+		case '03':
+			return '☁️'
+		case '04':
+			return '☁️'
+		case '09':
+			return '🌧️'
+		case '10':
+			return '🌦️'
+		case '11':
+			return '🌩️'
+		case '13':
+			return '❄️'
+		case '50':
+			return '🌫️'
+	}
+}
 const getWeather=async city =>
 {
     const token=await getValueKey(process.env.Token??Token_dictionary.token)
@@ -13,7 +35,7 @@ const getWeather=async city =>
             units:'metric'
         }
     })
-    console.log(data);
+    return data
     
     
     
@@ -35,4 +57,4 @@ const getWeather=async city =>
 }
 
 
-export {getWeather}
+export {getWeather,getIcon}
