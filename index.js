@@ -1,59 +1,62 @@
-import getArgs from "./helpers/args.js"
-import { getWeather } from "./services/api.services.js"
-import {printError,printHelp,printSucces} from "./services/log.services.js"
-import { Token_dictionary, saveKeyValue } from "./services/storage.services.js"
+import getArgs from "./helpers/args.js";
+import { getWeather } from "./services/api.services.js";
+import { printError, printHelp, printSucces } from "./services/log.services.js";
+import { Token_dictionary, getValueKey, saveKeyValue } from "./services/storage.services.js";
 
-const saveToken=async(token)=>{
-    if(!token.length){
-        printError("Please added token")
-        return
+const saveToken = async (token) => {
+  if (!token.length) {
+    printError("Please added token");
+    return;
+  }
+  try {
+    await saveKeyValue(Token_dictionary.token, token);
+    printSucces("Token was saved");
+  } catch (error) {
+    printError(error.message);
+  }
+};
+
+const saveCity = async (city) => {
+    if (!city.length) {
+      printError("City doesn`t exist");
+      return;
     }
     try {
-        await saveKeyValue( Token_dictionary.token,token)
-        printSucces('Token was saved')
+      await saveKeyValue(Token_dictionary.city, city);
+      printSucces("City was saved");
     } catch (error) {
-        printError(error.message)
+      printError(error.message);
     }
-}
-const getForcest=async()=>{
-    
-    try {
-        const response=await getWeather(process.env.CITY??'uzbekistan')
-        console.log(response);
-    } catch (error) {
-        if(error?.response?.status==404)
-        {
-            printError("CITY NOT FOUND ?")
-        }
-
-        else if(error?.response?.status==401)
-        {
-            printError("Invalid Token")
-        }
-
-        else{
-            console.log(error.message);
-        }
+  };
+const getForcest = async () => {
+  try {
+    const city =process.env.CITY ?? await getValueKey(Token_dictionary.city)
+    const response = await getWeather(city);
+    console.log(response);
+  } catch (error) {
+    if (error?.response?.status == 404) {
+      printError("CITY NOT FOUND ?");
+    } else if (error?.response?.status == 401) {
+      printError("Invalid Token");
+    } else {
+      console.log(error.message);
     }
-}
-const startCLI=()=>{
-  
-    const args=getArgs(process.argv)
-    // console.log(process.env)/;
-    if(args.h)
-    {
-        printHelp()
-    }
-    if(args.s)
-    {
+  }
+};
+const startCLI = () => {
+  const args = getArgs(process.argv);
+  // console.log(process.env)/;
+  if (args.h) {
+    return printHelp();
+  }
+  if (args.s) {
+    return saveCity(args.s)
+  }
 
-    }
+  if (args.t) {
+    return saveToken(args.t);
+  }
+  return getForcest();
+};
 
-    if(args.t)
-    {
-        return saveToken(args.t)
-    }
-getForcest()
-}
-
-startCLI()
+startCLI();
